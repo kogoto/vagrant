@@ -1,0 +1,35 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure(2) do |config|
+
+  config.vm.define "ap1" do |node|
+    node.vm.network "private_network", ip: "192.168.33.10"
+    node.vm.hostname = "ap1.localdomain"
+    node.vm.provider "virtualbox" do |vb|
+      vb.name = "centos7-ap"
+      vb.memory = "512"
+    end
+
+    node.vm.provision "shell", path: "scripts/ap.sh"
+  end
+  
+  config.vm.define "proxy1" do |node|
+    node.vm.network "private_network", ip: "192.168.33.20"
+    node.vm.hostname = "proxy1.localdomain"
+    node.vm.provider "virtualbox" do |vb|
+      vb.name = "centos7-proxy"
+      vb.memory = "512"
+    end
+    
+    node.vm.provision "shell", path: "scripts/proxy.sh"
+  end
+  
+  config.vm.box = "chef/centos-7.0"
+  config.vm.provision "shell", path: "scripts/base.sh"
+
+end
